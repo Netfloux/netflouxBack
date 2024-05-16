@@ -421,15 +421,15 @@ export interface ApiNoteNote extends Schema.CollectionType {
         },
         number
       >;
-    users_permissions_user: Attribute.Relation<
-      'api::note.note',
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
     movie: Attribute.Relation<
       'api::note.note',
       'manyToOne',
       'api::movie.movie'
+    >;
+    users_permissions_user: Attribute.Relation<
+      'api::note.note',
+      'manyToOne',
+      'plugin::users-permissions.user'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -774,7 +774,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     username: Attribute.String &
@@ -803,9 +802,9 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    note: Attribute.Relation<
+    notes: Attribute.Relation<
       'plugin::users-permissions.user',
-      'oneToOne',
+      'oneToMany',
       'api::note.note'
     >;
     createdAt: Attribute.DateTime;
