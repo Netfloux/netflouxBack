@@ -368,6 +368,7 @@ export interface ApiMovieMovie extends Schema.CollectionType {
     singularName: 'movie';
     pluralName: 'movies';
     displayName: 'Movie';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -377,6 +378,11 @@ export interface ApiMovieMovie extends Schema.CollectionType {
     description: Attribute.Text;
     poster: Attribute.Media & Attribute.Required;
     releaseDate: Attribute.Date;
+    notes: Attribute.Relation<
+      'api::movie.movie',
+      'oneToMany',
+      'api::note.note'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -391,6 +397,46 @@ export interface ApiMovieMovie extends Schema.CollectionType {
       'oneToOne',
       'admin::user'
     > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiNoteNote extends Schema.CollectionType {
+  collectionName: 'notes';
+  info: {
+    singularName: 'note';
+    pluralName: 'notes';
+    displayName: 'Note';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    note: Attribute.Integer &
+      Attribute.Required &
+      Attribute.SetMinMax<
+        {
+          max: 5;
+        },
+        number
+      >;
+    movie: Attribute.Relation<
+      'api::note.note',
+      'manyToOne',
+      'api::movie.movie'
+    >;
+    users_permissions_user: Attribute.Relation<
+      'api::note.note',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::note.note', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::note.note', 'oneToOne', 'admin::user'> &
       Attribute.Private;
   };
 }
@@ -775,7 +821,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     username: Attribute.String &
@@ -803,6 +848,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'plugin::users-permissions.user',
       'manyToOne',
       'plugin::users-permissions.role'
+    >;
+    notes: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::note.note'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -832,6 +882,7 @@ declare module '@strapi/types' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'api::movie.movie': ApiMovieMovie;
+      'api::note.note': ApiNoteNote;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::content-releases.release': PluginContentReleasesRelease;
