@@ -22,6 +22,17 @@ npm run start
 yarn start
 ```
 
+### `Import the data`
+
+```
+npm run import
+# or
+yarn import
+```
+Press yes on the second step to proceed to the import
+
+![img.png](img.png)
+
 ### `build`
 
 Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
